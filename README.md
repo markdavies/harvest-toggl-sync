@@ -27,3 +27,18 @@ A web application to export time entries from Harvest, edit them in a table, and
 - Add or delete rows
 - Map Harvest projects to Toggl projects
 - Import entries to Toggl with progress tracking
+
+## Deploy to Vercel
+
+1. Push this repo to GitHub
+
+2. Import the project in [Vercel](https://vercel.com/new)
+
+3. Add environment variables in the Vercel dashboard:
+   - `HARVEST_ACCESS_TOKEN`
+   - `HARVEST_ACCOUNT_ID`
+   - `TOGGL_API_TOKEN`
+
+4. Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/markdavies/harvest-toggl-sync&env=HARVEST_ACCESS_TOKEN,HARVEST_ACCOUNT_ID,TOGGL_API_TOKEN)

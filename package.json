@@ -10,9 +10,14 @@
   "scripts": {
     "dev": "concurrently \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build -w shared && npm run build -w server && npm run build -w client",
-    "start": "npm run start -w server"
+    "start": "npm run start -w server",
+    "vercel-build": "cd client && npm run build"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@vercel/node": "^5.0.2",
     "concurrently": "^9.1.2"
   }
 }
