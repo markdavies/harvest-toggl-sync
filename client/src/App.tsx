@@ -68,6 +68,16 @@ export default function App() {
     setEntries(entries.filter((e) => e.id !== id));
   };
 
+  const handleBulkUpdate = (ids: Set<string>, field: keyof TimeEntryRow, value: string | number | boolean) => {
+    setEntries(entries.map((e) =>
+      ids.has(e.id) ? { ...e, [field]: value, isModified: true } : e
+    ));
+  };
+
+  const handleBulkDelete = (ids: Set<string>) => {
+    setEntries(entries.filter((e) => !ids.has(e.id)));
+  };
+
   const handleAddEntry = () => {
     const newEntry: TimeEntryRow = {
       id: crypto.randomUUID(),
@@ -156,6 +166,8 @@ export default function App() {
             onUpdate={handleUpdateEntry}
             onDelete={handleDeleteEntry}
             onAdd={handleAddEntry}
+            onBulkUpdate={handleBulkUpdate}
+            onBulkDelete={handleBulkDelete}
           />
 
           {entries.length > 0 && (

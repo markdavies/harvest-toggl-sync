@@ -5,9 +5,11 @@ interface TableRowProps {
   entry: TimeEntryRow;
   onUpdate: (entry: TimeEntryRow) => void;
   onDelete: (id: string) => void;
+  selected: boolean;
+  onSelect: (id: string, checked: boolean) => void;
 }
 
-export function TableRow({ entry, onUpdate, onDelete }: TableRowProps) {
+export function TableRow({ entry, onUpdate, onDelete, selected, onSelect }: TableRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(entry);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +44,9 @@ export function TableRow({ entry, onUpdate, onDelete }: TableRowProps) {
   if (isEditing) {
     return (
       <tr className={rowClass}>
+        <td className="px-3 py-2 border-b text-center">
+          <input type="checkbox" checked={selected} onChange={(e) => onSelect(entry.id, e.target.checked)} className="w-4 h-4" />
+        </td>
         <td className="px-3 py-2 border-b">
           <input
             ref={inputRef}
@@ -131,6 +136,9 @@ export function TableRow({ entry, onUpdate, onDelete }: TableRowProps) {
 
   return (
     <tr className={rowClass} onDoubleClick={handleDoubleClick}>
+      <td className="px-3 py-2 border-b text-center">
+        <input type="checkbox" checked={selected} onChange={(e) => onSelect(entry.id, e.target.checked)} className="w-4 h-4" />
+      </td>
       <td className="px-3 py-2 border-b text-sm">{entry.date}</td>
       <td className="px-3 py-2 border-b text-sm">{entry.client}</td>
       <td className="px-3 py-2 border-b text-sm">{entry.project}</td>
