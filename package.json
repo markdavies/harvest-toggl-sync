@@ -10,8 +10,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build -w shared && npm run build -w server && npm run build -w client",
-    "start": "npm run start -w server",
-    "vercel-build": "cd client && npx vite build --outDir ../public"
+    "start": "npm run start -w server"
   },
   "dependencies": {
     "zod": "^3.24.2"
