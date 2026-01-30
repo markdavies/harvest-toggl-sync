@@ -26,6 +26,7 @@ export default function App() {
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null);
   const [importResults, setImportResults] = useState<ImportResult[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [clientFilter, setClientFilter] = useState('');
 
   const statusQuery = useQuery({
     queryKey: ['status'],
@@ -105,6 +106,11 @@ export default function App() {
     );
   };
 
+  const clientNames = [...new Set(entries.map((e) => e.client).filter(Boolean))].sort();
+  const filteredEntries = clientFilter
+    ? entries.filter((e) => e.client === clientFilter)
+    : entries;
+
   const isConfigured =
     statusQuery.data?.harvestConfigured && statusQuery.data?.togglConfigured;
 
@@ -140,10 +146,13 @@ export default function App() {
             onToChange={setToDate}
             onFetch={handleFetch}
             isLoading={harvestQuery.isFetching}
+            clientNames={clientNames}
+            clientFilter={clientFilter}
+            onClientFilterChange={setClientFilter}
           />
 
           <TimeEntryTable
-            entries={entries}
+            entries={filteredEntries}
             onUpdate={handleUpdateEntry}
             onDelete={handleDeleteEntry}
             onAdd={handleAddEntry}
