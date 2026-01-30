@@ -1,16 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/dist",
+  "installCommand": "npm install",
+  "buildCommand": "cd client && npm run build && cp -r dist ../public",
+  "outputDirectory": "public",
   "framework": null,
-  "rewrites": [
-    { "source": "/api/status", "destination": "/api/status" },
-    { "source": "/api/harvest/entries", "destination": "/api/harvest/entries" },
-    { "source": "/api/harvest/projects", "destination": "/api/harvest/projects" },
-    { "source": "/api/toggl/workspaces", "destination": "/api/toggl/workspaces" },
-    { "source": "/api/toggl/projects", "destination": "/api/toggl/projects" },
-    { "source": "/api/toggl/import", "destination": "/api/toggl/import" }
-  ],
   "functions": {
     "api/**/*.ts": {
       "maxDuration": 30
