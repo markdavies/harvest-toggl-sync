@@ -46,13 +46,25 @@ export async function getWorkspaces(): Promise<TogglWorkspace[]> {
 }
 
 export async function getProjects(workspaceId: number): Promise<TogglProject[]> {
-  const projects = await togglFetch<Array<{ id: number; name: string; workspace_id: number }> | null>(
-    `/workspaces/${workspaceId}/projects`
-  );
+  const PER_PAGE = 200;
+  const allProjects: Array<{ id: number; name: string; workspace_id: number }> = [];
+  let page = 1;
 
-  if (!projects) return [];
+  while (true) {
+    const projects = await togglFetch<Array<{ id: number; name: string; workspace_id: number }> | null>(
+      `/workspaces/${workspaceId}/projects?per_page=${PER_PAGE}&page=${page}`
+    );
 
-  return projects.map(p => ({
+    if (!projects || projects.length === 0) break;
+
+    allProjects.push(...projects);
+
+    if (projects.length < PER_PAGE) break;
+
+    page++;
+  }
+
+  return allProjects.map(p => ({
     id: p.id,
     name: p.name,
     workspaceId: p.workspace_id,
