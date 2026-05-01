@@ -47,11 +47,29 @@ export async function getWorkspaces(): Promise<TogglWorkspace[]> {
 
 export async function getProjects(workspaceId: number): Promise<TogglProject[]> {
   const PER_PAGE = 200;
-  const allProjects: Array<{ id: number; name: string; workspace_id: number }> = [];
+  const allProjects: Array<{ id: number; name: string; workspace_id: number; client_id?: number | null }> = [];
   let page = 1;
 
+  const clientNameById = new Map<number, string>();
+  try {
+    const allClients: Array<{ id: number; name: string }> = [];
+    let clientsPage = 1;
+    while (true) {
+      const clients = await togglFetch<Array<{ id: number; name: string }> | null>(
+        `/workspaces/${workspaceId}/clients?per_page=${PER_PAGE}&page=${clientsPage}`
+      );
+      if (!clients || clients.length === 0) break;
+      allClients.push(...clients);
+      if (clients.length < PER_PAGE) break;
+      clientsPage++;
+    }
+    for (const c of allClients) clientNameById.set(c.id, c.name);
+  } catch {
+    // Non-fatal: projects still load, but without client names
+  }
+
   while (true) {
-    const projects = await togglFetch<Array<{ id: number; name: string; workspace_id: number }> | null>(
+    const projects = await togglFetch<Array<{ id: number; name: string; workspace_id: number; client_id?: number | null }> | null>(
       `/workspaces/${workspaceId}/projects?per_page=${PER_PAGE}&page=${page}`
     );
 
@@ -67,6 +85,8 @@ export async function getProjects(workspaceId: number): Promise<TogglProject[]> 
   return allProjects.map(p => ({
     id: p.id,
     name: p.name,
+    clientId: p.client_id ?? null,
+    clientName: p.client_id != null ? (clientNameById.get(p.client_id) ?? null) : null,
     workspaceId: p.workspace_id,
   }));
 }

@@ -31,6 +31,19 @@ export function ImportButton({
     return Array.from(projectSet).sort();
   }, [entries]);
 
+  const sortedProjects = useMemo(() => {
+    return [...projects].sort((a, b) => {
+      const aClient = (a.clientName ?? '').toLocaleLowerCase();
+      const bClient = (b.clientName ?? '').toLocaleLowerCase();
+      const clientCmp = aClient.localeCompare(bClient);
+      if (clientCmp !== 0) return clientCmp;
+
+      const aName = a.name.toLocaleLowerCase();
+      const bName = b.name.toLocaleLowerCase();
+      return aName.localeCompare(bName);
+    });
+  }, [projects]);
+
   const handleImport = () => {
     onImport(projectMapping);
   };
@@ -86,9 +99,9 @@ export function ImportButton({
                     className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
                   >
                     <option value="">No project (unassigned)</option>
-                    {projects.map((p) => (
+                    {sortedProjects.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.name}
+                        {p.clientName ? `${p.clientName} — ${p.name}` : p.name}
                       </option>
                     ))}
                   </select>

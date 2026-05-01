@@ -40,6 +40,8 @@ export interface TogglWorkspace {
 export interface TogglProject {
   id: number;
   name: string;
+  clientId?: number | null;
+  clientName?: string | null;
   workspaceId: number;
 }
 
